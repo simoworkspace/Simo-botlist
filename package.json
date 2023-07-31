@@ -4,18 +4,21 @@
   "description": "Simo é um projeto open source com o objetivo de ajudar desenvolvedores a alavancar seus respectivos bots.",
   "main": "index.ts",
   "scripts": {
-    "dev": "tsx index.ts"
+    "start": "ts-node index.ts",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "discord.js": "^14.11.0",
+    "glob": "^10.3.3",
     "mongoose": "^7.2.0",
     "tsx": "^3.12.7",
     "typescript": "^5.0.4"
   },
   "devDependencies": {
-    "@types/glob": "^8.1.0"
+    "@types/glob": "^8.1.0",
+    "ts-node": "^10.9.1"
   }
 }
