@@ -1,9 +1,13 @@
 import { sync } from "glob";
 import { connect } from 'mongoose';
 import { ExtendedClient } from './src/Client';
-import { CLIENT_TOKEN, MONGOOSE_URL } from "./.config.json";
 import { JSONStructure } from './src/commands/raw-app-commands';
 import { ApplicationCommandStructure, CommandStructure } from './src/typings';
+import env from "dotenv";
+
+const { CLIENT_TOKEN, MONGOOSE_URL } = process.env
+
+env.config();
 
 export const client: ExtendedClient = new ExtendedClient({ intents: [34311] });
 
@@ -21,7 +25,7 @@ sync('./src/commands/application-commands/**/*.ts', { ignore: './src/commands/**
 
 client.on('ready', async (): Promise<void> => {
     await client.application?.commands.set(JSONStructure);
-    await connect(MONGOOSE_URL);
+    await connect(MONGOOSE_URL as string);
 
     console.log(`Ligado como ${client.user!.username}`);
 });
@@ -35,4 +39,4 @@ sync('./src/events/*.ts').forEach((e: string): void => {
 process.on('unhandRejection', console.error);
 process.on('uncaughtException', console.error);
 
-client.login(CLIENT_TOKEN).catch(console.error);
+client.login(CLIENT_TOKEN as string).catch(console.error);
