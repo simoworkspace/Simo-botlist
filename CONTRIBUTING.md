@@ -12,4 +12,3 @@ Para contribuir:
 2. Clone sua bifurcação do repositório para seu ambiente de desenvolvimento.
 3. Faça suas alterações e adicione testes, se possível.
 4. Envie um pull request com suas alterações.
-5. oi
