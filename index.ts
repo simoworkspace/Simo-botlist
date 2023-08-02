@@ -12,13 +12,13 @@ env.config();
 export const client: ExtendedClient = new ExtendedClient({ intents: [34311] });
 
 sync('./src/commands/prefixed/*.ts').forEach(async (path: string): Promise<void> => {
-    const { default: command }: { default: CommandStructure; } = await import(path);
+    const { default: command }: { default: CommandStructure; } = await import(`./${path}`);
 
     client.commands.set(command.name, command);
 });
 
 sync('./src/commands/application-commands/**/*.ts', { ignore: './src/commands/**/raw-app-commands.ts' }).forEach((f: string): void => {
-    const { default: command }: { default: ApplicationCommandStructure; } = require(f);
+    const { default: command }: { default: ApplicationCommandStructure; } = require(`./${f}`);
 
     client.applicationCommands.set(command.name, command);
 });
@@ -31,7 +31,7 @@ client.on('ready', async (): Promise<void> => {
 });
 
 sync('./src/events/*.ts').forEach((e: string): void => {
-    const event = require(e);
+    const event = require(`./${e}`);
 
     event.default;
 });
