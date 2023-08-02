@@ -14,5 +14,11 @@ export const JSONStructure: ApplicationCommandData[] = [
                 required: false
             }
         ]
-    }
+    },
+	{
+		    
+        name: 'addbot',
+        type: ApplicationCommandType.ChatInput,
+        description: 'Adicione seu bot na botlist',
+	}
 ];
