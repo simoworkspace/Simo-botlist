@@ -4,6 +4,7 @@ import { ExtendedClient } from './src/Client';
 import { JSONStructure } from './src/commands/raw-app-commands';
 import { ApplicationCommandStructure, CommandStructure } from './src/typings';
 import env from "dotenv";
+import express, { Response, Request } from "express";
 
 const { CLIENT_TOKEN, MONGOOSE_URL } = process.env
 
@@ -39,4 +40,14 @@ sync('./src/events/*.ts').forEach((e: string): void => {
 process.on('unhandRejection', console.error);
 process.on('uncaughtException', console.error);
 
+const app = express();
+
+app.get("/", (request: Request, response: Response) => {
+  const ping = new Date();
+  ping.setHours(ping.getHours() - 3);
+  console.log(`Ping recebido às ${ping.getUTCHours()}:${ping.getUTCMinutes()}:${ping.getUTCSeconds()}`);
+  response.sendStatus(200);
+});
+app.listen(process.env.PORT);
+					 
 client.login(CLIENT_TOKEN as string).catch(console.error);
