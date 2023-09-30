@@ -1,4 +1,4 @@
-import { CommandStructure } from "../../typings";
+import { CommandStructure } from "../../types";
 import { OWNERS_ID } from '../../../.config.json';
 
 export default {

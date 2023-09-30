@@ -1,6 +1,6 @@
 import { Message } from "discord.js";
 import { client } from "../../index";
-import { CommandStructure } from "../typings";
+import { CommandStructure } from "../types";
 
 client.on('messageCreate', async (message): Promise<any> => {
     if (message.author.bot) return;

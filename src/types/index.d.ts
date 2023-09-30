@@ -12,3 +12,28 @@ export interface ApplicationCommandStructure {
     autocomplete?: (interaction: AutocompleteInteraction) => unknown;
     run?: (client: ExtendedClient, interaction: ChatInputCommandInteraction) => Promise<unknown>;
 };
+
+export interface BotStructure {
+    _id: Snowflake;
+    name: string;
+    avatar: string;
+    invite_url: string;
+    website_url: string;
+    support_server: string;
+    source_code: string;
+    short_description: string;
+    long_description: string;
+    prefixes: string[];
+    owners: Snowflake[];
+    created_at: string;
+    verified: boolean;
+    tags: string[];
+    approved: boolean;
+    votes: VoteStructure[];
+}
+
+export interface VoteStructure {
+    votes: number;
+    user: Snowflake;
+    last_vote: string;
+}

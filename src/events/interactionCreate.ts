@@ -1,5 +1,5 @@
 import { client } from "../../index";
-import type { ApplicationCommandStructure } from "../typings";
+import type { ApplicationCommandStructure } from "../types";
 import { ChatInputCommandInteraction, Interaction, CacheType } from "discord.js";
 
 client.on('interactionCreate', async (interaction: Interaction<CacheType>): Promise<void> => {
