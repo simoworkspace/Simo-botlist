@@ -2,13 +2,13 @@ import { sync } from "glob";
 import { connect } from 'mongoose';
 import { ExtendedClient } from './src/Client';
 import { JSONStructure } from './src/commands/raw-app-commands';
-import { ApplicationCommandStructure, CommandStructure } from './src/typings';
+import { ApplicationCommandStructure, CommandStructure } from './src/types';
 import env from "dotenv";
 import express, { Response, Request } from "express";
 
-const { CLIENT_TOKEN, MONGOOSE_URL } = process.env
-
 env.config();
+
+const { CLIENT_TOKEN, MONGOOSE_URL } = process.env
 
 export const client: ExtendedClient = new ExtendedClient({ intents: [34311] });
 
@@ -48,6 +48,11 @@ app.get("/", (request: Request, response: Response) => {
   console.log(`Ping recebido às ${ping.getUTCHours()}:${ping.getUTCMinutes()}:${ping.getUTCSeconds()}`);
   response.sendStatus(200);
 });
+
 app.listen(process.env.PORT);
-					 
-client.login(CLIENT_TOKEN as string).catch(console.error);
+
+(async () => {
+    await connect(process.env.MONGOOSE_URL as string).catch(console.error);
+})();
+
+client.login(CLIENT_TOKEN).catch(console.error);
