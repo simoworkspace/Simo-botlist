@@ -1,4 +1,4 @@
-import type { ApplicationCommandStructure } from "../../typings";
+import type { ApplicationCommandStructure } from "../../types";
 
 export default {
     name: 'ping',
@@ -8,11 +8,11 @@ export default {
 
         if (!shard) return interaction.reply({
             content: `Shard ${targetShard} não foi encontrado`,
-            ephemeral: true 
+            ephemeral: true
         });
 
         return interaction.reply({
-            content: `Latência ${shard.ping}` 
+            content: `Latência ${shard.ping}`
         });
     }
 } as ApplicationCommandStructure;
