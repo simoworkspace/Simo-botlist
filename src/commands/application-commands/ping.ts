@@ -12,7 +12,7 @@ export default {
         });
 
         return interaction.reply({
-            content: `Latência ${shard.ping}`
+            content: `Ping: ${shard.ping}`
         });
     }
 } as ApplicationCommandStructure;

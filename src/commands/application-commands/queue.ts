@@ -1,10 +1,11 @@
 import type { ApplicationCommandStructure, BotStructure } from "../../types";
 import { EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, StringSelectMenuInteraction, ButtonBuilder, ButtonStyle, ButtonInteraction } from "discord.js";
 import { botSchema } from "../../schemas/Bot";
-
 export default {
 	name: "queue",
-	async run(client, interaction) {
+	async run(client, interaction: any) {
+		if (!interaction.member?.roles.cache.has("991400149307887696")) return interaction.reply("Você precisa ser um verificador para usar o comando.");
+		
 		let botsall: Array<{ label: string; value: string; description: string }> = [];
 
 		const bots: BotStructure[] = await botSchema.find({ approved: false });
@@ -14,7 +15,7 @@ export default {
 		const embed: EmbedBuilder = new EmbedBuilder()
 			.setTitle("Queue")
 			.setColor(0x00ff00)
-			.setDescription(bots.map((a: any, index: number) => `**[${index}]** [${a.name}](https://discord.com/api/oauth2/authorize?client_id=${a._id}&permissions=2147483639&scope=bot%20applications.commands)`).join("\n"))
+			.setDescription(bots.map((a: any, index: number) => `**[${index + 1}]** [${a.name}](https://discord.com/api/oauth2/authorize?client_id=${a._id}&permissions=2147483639&scope=bot%20applications.commands)`).join("\n"))
 
 		bots.map((a: BotStructure) => {
 			botsall.push(
@@ -38,7 +39,7 @@ export default {
 
 		const int = await interaction.reply({ embeds: [embed], components: [actionRow] });
 
-		const colector = int.createMessageComponentCollector({ filter: (i) => i.user.id === interaction.user.id, time: 30000 });
+		const colector = int.createMessageComponentCollector({ filter: (i: any) => i.user.id === interaction.user.id, time: 30000 });
 
 		colector.on("collect", async (interaction: StringSelectMenuInteraction) => {
 			if (!interaction.isStringSelectMenu()) return;
