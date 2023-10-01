@@ -75,7 +75,7 @@ export default {
 
 				if (interaction.customId === "aprovado") {
 					await botSchema.findById(selbot?._id).updateOne({
-						approved: false
+						approved: true
 					})
 
 					await fetch(process.env.WEBHOOK as string, {
