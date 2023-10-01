@@ -41,7 +41,10 @@ export default {
 		const colector = int.createMessageComponentCollector({ filter: (i) => i.user.id === interaction.user.id, time: 30000 });
 
 		colector.on("collect", async (interaction: StringSelectMenuInteraction) => {
-			const selbot: BotStructure | null = await botSchema.findById(interaction.values[0])
+			if (!interaction.isStringSelectMenu()) return;
+			if (interaction.customId !== "selecaobot") return;
+
+			const selbot: BotStructure | undefined = bots.find((bot) => bot._id === interaction.values[0]);
 
 			const embed: EmbedBuilder = new EmbedBuilder()
 				.setTitle("Ações - " + selbot?.name)
@@ -51,12 +54,12 @@ export default {
 			const actionRow: ActionRowBuilder<any> = new ActionRowBuilder()
 				.addComponents(
 					new ButtonBuilder()
-						.setCustomId("aprovado_" + selbot?._id)
+						.setCustomId("aprovado")
 						.setLabel("Aprovar")
 						.setStyle(ButtonStyle.Success)
 						.setEmoji("✅"),
 					new ButtonBuilder()
-						.setCustomId("recusado_" + selbot?._id)
+						.setCustomId("recusado")
 						.setLabel("Recusar")
 						.setStyle(ButtonStyle.Danger)
 						.setEmoji("✖️")
@@ -67,14 +70,20 @@ export default {
 			const colector = int.createMessageComponentCollector({ filter: (i) => i.user.id === interaction.user.id, time: 30000 });
 
 			colector.on("collect", async (interaction: ButtonInteraction) => {
+				if (!interaction.isButton()) return;
+
 				if (interaction.customId === "aprovado") {
 					await botSchema.findById(selbot?._id).updateOne({
-						approved: true
+						approved: false
 					})
+
 					await fetch(process.env.WEBHOOK as string, {
+						headers: {
+							"Content-Type":  'application/json'
+						},
 						method: "POST",
 						body: JSON.stringify({
-							content: selbot?.owners.length === 0 ? `<@${selbot?.owners[0]}>` : selbot?.owners.map(a => `<@${a}>`),
+							content: selbot?.owners.length === 0 ? `<@${selbot?.owners[0]}>` : selbot?.owners.map(a => `<@${a}>`).join(", "),
 							embeds: [{
 								thumbnail: {
 									url: `https://cdn.discordapp.com/avatars/${selbot?._id}/${selbot?.avatar}.png`
@@ -83,16 +92,20 @@ export default {
 								color: 0x008000,
 								description: `O seu bot: **${selbot?.name}** (\`${selbot?._id}\`) foi aprovado!!`
 							}]
-
 						})
-					})
-					interaction.update({ content: `Bot **${selbot?.name}** foi aprovado com sucesso!`, embeds: [], components: [] })
+					});
+
+					await interaction.update({ content: `Bot **${selbot?.name}** foi aprovado com sucesso!`, embeds: [], components: [] })
 				} else {
-					await botSchema.findByIdAndDelete(selbot?._id)
+					await botSchema.findByIdAndDelete(selbot?._id);
+
 					await fetch(process.env.WEBHOOK as string, {
+						headers: {
+							"Content-Type":  'application/json'
+						},
+						method: "POST",
 						body: JSON.stringify({
-							method: "POST",
-							content: selbot?.owners.length === 0 ? `<@${selbot?.owners[0]}>` : selbot?.owners.map(a => `<@${a}>`),
+							content: selbot?.owners.length === 0 ? `<@${selbot?.owners[0]}>` : selbot?.owners.map(a => `<@${a}>`).join(", "),
 							embeds: [{
 								thumbnail: {
 									url: `https://cdn.discordapp.com/avatars/${selbot?._id}/${selbot?.avatar}.png`
@@ -103,9 +116,9 @@ export default {
 							}]
 
 						})
-					})
+					});
 
-					interaction.update({ content: `Bot **${selbot?.name}** foi recusado com sucesso!`, embeds: [], components: [] })
+					await interaction.update({ content: `Bot **${selbot?.name}** foi recusado com sucesso!`, embeds: [], components: [] })
 				}
 			});
 		});
