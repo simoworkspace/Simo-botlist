@@ -1,5 +1,5 @@
 import type { ApplicationCommandStructure, BotStructure } from "../../types";
-import { EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, StringSelectMenuInteraction, ButtonBuilder, ButtonStyle, ButtonInteraction } from "discord.js";
+import { EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, StringSelectMenuInteraction, ButtonBuilder, ButtonStyle, ButtonInteraction, IntegrationApplication } from "discord.js";
 import { botSchema } from "../../schemas/Bot";
 export default {
 	name: "queue",
@@ -70,13 +70,17 @@ export default {
 
 			const colector = int.createMessageComponentCollector({ filter: (i) => i.user.id === interaction.user.id, time: 30000 });
 
-			colector.on("collect", async (interaction: ButtonInteraction) => {
+			colector.on("collect", async (interaction: any) => {
 				if (!interaction.isButton()) return;
 
 				if (interaction.customId === "aprovado") {
 					await botSchema.findById(selbot?._id).updateOne({
 						approved: true
 					})
+
+					interaction.guild.members.cache.get(selbot?._id).roles.add("988515244601118810");
+
+					selbot?.owners.forEach(owner => interaction.guild.members.cache.get(owner).roles.add("991507628553412759"));
 
 					await fetch(process.env.WEBHOOK as string, {
 						headers: {
