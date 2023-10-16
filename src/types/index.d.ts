@@ -37,3 +37,10 @@ export interface VoteStructure {
     user: Snowflake;
     last_vote: string;
 }
+
+export interface UserStructure {
+    _id: Snowflake;
+    username: string;
+    avatar: string;
+    notifications: Map<string, NotificationBody>;
+}
