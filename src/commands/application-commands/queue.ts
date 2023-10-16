@@ -1,6 +1,9 @@
 import type { ApplicationCommandStructure, BotStructure } from "../../types";
 import { EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, StringSelectMenuInteraction, ButtonBuilder, ButtonStyle, ButtonInteraction, IntegrationApplication } from "discord.js";
 import { botSchema } from "../../schemas/Bot";
+import { userSchema } from "../../schemas/User";
+import type { UserStructure } from "../../types";
+
 export default {
 	name: "queue",
 	async run(client, interaction: any) {
@@ -122,7 +125,24 @@ export default {
 
 						})
 					});
+const user: null | any = await userSchema.findById(selbot?.owners[0]);
+					
+const notificationsId = [...user.notifications.keys()];
 
+    user.notifications.set(
+        notificationsId.length < 1
+            ? "1"
+            : `${Math.max(...notificationsId.map(Number)) + 1}`,
+        {
+					  content: `Seu bot **${selbot?.name}** foi recusado.`,
+					  type: 2,
+            sent_at: new Date().toISOString(),
+				}
+			
+    );
+
+    await user.save();
+																		
 					await interaction.update({ content: `Bot **${selbot?.name}** foi recusado com sucesso!`, embeds: [], components: [] })
 				}
 			});
