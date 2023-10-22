@@ -2,13 +2,12 @@ import type { ApplicationCommandStructure, BotStructure } from "../../types";
 import { EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, StringSelectMenuInteraction, ButtonBuilder, ButtonStyle, ButtonInteraction, IntegrationApplication } from "discord.js";
 import { botSchema } from "../../schemas/Bot";
 import { userSchema } from "../../schemas/User";
-import type { UserStructure } from "../../types";
 
 export default {
 	name: "queue",
 	async run(client, interaction: any) {
 		if (!interaction.member?.roles.cache.has("991400149307887696")) return interaction.reply("Você precisa ser um verificador para usar o comando.");
-		
+
 		let botsall: Array<{ label: string; value: string; description: string }> = [];
 
 		const bots: BotStructure[] = await botSchema.find({ approved: false });
@@ -77,39 +76,41 @@ export default {
 				if (!interaction.isButton()) return;
 
 				if (interaction.customId === "aprovado") {
-					await botSchema.findById(selbot?._id).updateOne({
-						approved: true
-					})
+					try {
+						interaction.guild.members.cache.get(selbot?._id).roles.add("988515244601118810");
+						selbot?.owners.forEach(owner => interaction.guild.members.cache.get(owner).roles?.add("991507628553412759"));
+					} catch {
 
-					interaction.guild.members.cache.get(selbot?._id).roles.add("988515244601118810");
-
-					selbot?.owners.forEach(owner => interaction.guild.members.cache.get(owner).roles.add("991507628553412759"));
-
-					await fetch(process.env.WEBHOOK as string, {
-						headers: {
-							"Content-Type":  'application/json'
-						},
-						method: "POST",
-						body: JSON.stringify({
-							content: selbot?.owners.length === 0 ? `<@${selbot?.owners[0]}>` : selbot?.owners.map(a => `<@${a}>`).join(", "),
-							embeds: [{
-								thumbnail: {
-									url: `https://cdn.discordapp.com/avatars/${selbot?._id}/${selbot?.avatar}.png`
-								},
-								title: "✅ | Análise",
-								color: 0x008000,
-								description: `O seu bot: **${selbot?.name}** (\`${selbot?._id}\`) foi aprovado!!`
-							}]
+						await botSchema.findById(selbot?._id).updateOne({
+							approved: true
 						})
-					});
 
-					await interaction.update({ content: `Bot **${selbot?.name}** foi aprovado com sucesso!`, embeds: [], components: [] })
+						await fetch(process.env.WEBHOOK as string, {
+							headers: {
+								"Content-Type": 'application/json'
+							},
+							method: "POST",
+							body: JSON.stringify({
+								content: selbot?.owners.length === 0 ? `<@${selbot?.owners[0]}>` : selbot?.owners.map(a => `<@${a}>`).join(", "),
+								embeds: [{
+									thumbnail: {
+										url: `https://cdn.discordapp.com/avatars/${selbot?._id}/${selbot?.avatar}.png`
+									},
+									title: "✅ | Análise",
+									color: 0x008000,
+									description: `O seu bot: **${selbot?.name}** (\`${selbot?._id}\`) foi aprovado!!`
+								}]
+							})
+						});
+
+						await interaction.update({ content: `Bot **${selbot?.name}** foi aprovado com sucesso!`, embeds: [], components: [] })
+					}
 				} else {
 					await botSchema.findByIdAndDelete(selbot?._id);
 
 					await fetch(process.env.WEBHOOK as string, {
 						headers: {
-							"Content-Type":  'application/json'
+							"Content-Type": 'application/json'
 						},
 						method: "POST",
 						body: JSON.stringify({
@@ -125,24 +126,27 @@ export default {
 
 						})
 					});
-const user: null | any = await userSchema.findById(selbot?.owners[0]);
-					
-const notificationsId = [...user.notifications.keys()];
 
-    user.notifications.set(
-        notificationsId.length < 1
-            ? "1"
-            : `${Math.max(...notificationsId.map(Number)) + 1}`,
-        {
-					  content: `Seu bot **${selbot?.name}** foi recusado.`,
-					  type: 2,
-            sent_at: new Date().toISOString(),
-				}
-			
-    );
+					const user = await userSchema.findById(selbot?.owners[0]);
 
-    await user.save();
-																		
+					if (!user) return;
+
+					const notificationsId = [...user?.notifications.keys()];
+
+					user?.notifications.set(
+						notificationsId.length < 1
+							? "1"
+							: `${Math.max(...notificationsId.map(Number)) + 1}`,
+						{
+							content: `Seu bot **${selbot?.name}** foi recusado.`,
+							type: 2,
+							sent_at: new Date().toISOString(),
+						}
+
+					);
+
+					await user.save();
+
 					await interaction.update({ content: `Bot **${selbot?.name}** foi recusado com sucesso!`, embeds: [], components: [] })
 				}
 			});
