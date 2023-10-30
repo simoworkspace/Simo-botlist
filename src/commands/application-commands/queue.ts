@@ -18,7 +18,7 @@ export default {
 		const embed: EmbedBuilder = new EmbedBuilder()
 			.setTitle("Queue")
 			.setColor(0x00ff00)
-			.setDescription(bots.map((a: any, index: number) => `**[${index + 1}]** [${a.name}](https://discord.com/api/oauth2/authorize?client_id=${a._id}&permissions=2147483639&scope=bot%20applications.commands)`).join("\n"))
+			.setDescription(bots.map((a: any, index: number) => `**[${index + 1}]** [${a.name}](https://discord.com/api/oauth2/authorize?client_id=${a._id}&scope=bot%20applications.commands)`).join("\n"))
 
 		bots.map((a: BotStructure) => {
 			botsall.push(
@@ -91,15 +91,7 @@ export default {
 						},
 						method: "POST",
 						body: JSON.stringify({
-							content: selbot?.owners.length === 0 ? `<@${selbot?.owners[0]}>` : selbot?.owners.map(a => `<@${a}>`).join(", "),
-							embeds: [{
-								thumbnail: {
-									url: `https://cdn.discordapp.com/avatars/${selbot?._id}/${selbot?.avatar}.png`
-								},
-								title: "✅ | Análise",
-								color: 0x008000,
-								description: `O seu bot: **${selbot?.name}** (\`${selbot?._id}\`) foi aprovado!!`
-							}]
+							content: selbot?.owners.length === 0 ? `<@${selbot?.owners[0]}>` : selbot?.owners.map(a => `<@${a}>`).join(", ") + `\n Seu bot: **${selbot?.name}** (\`${selbot?._id}\`) foi aprovado!`,
 						})
 					});
 
@@ -113,16 +105,7 @@ export default {
 						},
 						method: "POST",
 						body: JSON.stringify({
-							content: selbot?.owners.length === 0 ? `<@${selbot?.owners[0]}>` : selbot?.owners.map(a => `<@${a}>`).join(", "),
-							embeds: [{
-								thumbnail: {
-									url: `https://cdn.discordapp.com/avatars/${selbot?._id}/${selbot?.avatar}.png`
-								},
-								title: "✅ | Análise",
-								color: 0xff0000,
-								description: `O seu bot: **${selbot?.name}** (\`${selbot?._id}\`) foi recusado.`
-							}]
-
+							content: selbot?.owners.length === 0 ? `<@${selbot?.owners[0]}>` : selbot?.owners.map(a => `<@${a}>`).join(", ") + `\n :x: **|** Seu bot: **${selbot?.name}** (\`${selbot?._id}\`) foi recusado.`,
 						})
 					});
 const user: null | any = await userSchema.findById(selbot?.owners[0]);
@@ -141,8 +124,7 @@ const notificationsId = [...user.notifications.keys()];
 			
     );
 
-    await user.save();
-																		
+          await user.save();
 					await interaction.update({ content: `Bot **${selbot?.name}** foi recusado com sucesso!`, embeds: [], components: [] })
 				}
 			});
