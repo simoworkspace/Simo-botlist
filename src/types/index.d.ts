@@ -45,3 +45,12 @@ export interface UserStructure {
     avatar: string;
     notifications: Map<string, NotificationBody>;
 }
+
+export interface ApiStatusStructure {
+  total_mem: number;
+  free_mem: number;
+  users: number;
+  bots: number;
+  uptime: number;
+  request_count: number;
+}
