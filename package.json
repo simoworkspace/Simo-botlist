@@ -6,7 +6,7 @@
   "scripts": {
     "start": "ts-node index.ts",
     "build": "tsc",
-    "dev": "ts-node-dev index.tss"
+    "dev": "ts-node-dev index.ts"
   },
   "keywords": [],
   "author": "",
