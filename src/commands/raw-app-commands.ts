@@ -37,5 +37,10 @@ export const JSONStructure: ApplicationCommandData[] = [
 			name: "rank-votes",
 		  type: ApplicationCommandType.ChatInput,
 		  description: "Veja um rank de votos de bots.",
+	},
+	{
+			name: "status",
+		  type: ApplicationCommandType.ChatInput,
+		  description: "Veja os status da Simo api.",
 	}
 ];
