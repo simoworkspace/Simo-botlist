@@ -28,7 +28,7 @@ export default {
 				value: userBots.length ? userBots.map((bot) => `[${bot.name}](https://bombadeagua.life/bot/${bot._id})`).join(", ") : "Nenhum bot adicionado",
 			}, {
 			  name: "Times",
-				value: userTeams ? userTeams.map((team: any) => `[${team.team.name}](https://bombadeagua.life/time/${team.team_id}), ${team.team.members?.length} Membros`).join("\n") : `${user.username} não possuí times.`,
+				value: userTeams.length !== 0 ? userTeams.map((team: any) => `[${team.team.name}](https://bombadeagua.life/time/${team.team_id}), ${team.team.members?.length} Membros`).join("\n") : `${user.username} não possuí times.`,
 			});
 			return interaction.reply({
 				embeds: [embed]
