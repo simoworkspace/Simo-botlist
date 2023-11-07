@@ -43,6 +43,8 @@ export interface UserStructure {
     _id: Snowflake;
     username: string;
     avatar: string;
+	  bio: string;
+	  team: Team;
     notifications: Map<string, NotificationBody>;
 }
 
@@ -53,4 +55,24 @@ export interface ApiStatusStructure {
   bots: number;
   uptime: number;
   request_count: number;
+}
+
+export interface Team {
+    members?: TeamMember[];
+    id?: string;
+    name: string;
+    avatar_url: string;
+    description: string;
+    bot_id?: Snowflake;
+}
+
+export interface TeamMember {
+    id: Snowflake;
+    permission: TeamPermissions;
+    owner?: boolean;
+}
+
+export enum TeamPermissions {
+    Administrator,
+    ReadOnly,
 }
