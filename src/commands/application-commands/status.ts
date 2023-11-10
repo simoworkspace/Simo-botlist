@@ -30,7 +30,7 @@ export default {
           },
           {
             name: "Uptime",
-            value: `<t:28282773:R>`
+            value: "<t:" + Math.round(new Date(Date.now() - (data.uptime as number)).getTime() / 1000) + ":R>"
           },
           {
             name: "Requisições",
