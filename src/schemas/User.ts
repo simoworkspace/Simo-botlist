@@ -14,29 +14,15 @@ const rawUserSchema = new Schema<UserStructure>({
         type: String,
         required: true,
     },
-	  bio: {
-			type: String,
-			required: false,
-				default: ""
-		},
-	  team: {
-        id: String,
-        name: String,
-        avatar_url: String,
-        description: String,
-        bot_id: String,
-        members: [
-            {
-                id: String,
-                permission: Number,
-                owner: Boolean,
-            },
-        ],
+    bio: {
+        type: String,
+        required: false,
+        default: ""
     },
     notifications: {
         type: Map,
         of: Object,
-        default: new Map(), 
+        default: new Map(),
     },
 });
 
