@@ -16,21 +16,24 @@ export interface ApplicationCommandStructure {
 export interface BotStructure {
     _id: Snowflake;
     name: string;
-    avatar: string;
+    avatar: string | null;
     invite_url: string;
-    website_url: string;
-    support_server: string;
-    source_code: string;
+    website_url?: string;
+    support_server?: string;
+    source_code?: string;
     short_description: string;
     long_description: string;
     prefixes: string[];
-    owners: Snowflake[];
+    owner_id: Snowflake;
     created_at: string;
     verified: boolean;
     tags: string[];
     approved: boolean;
+    api_key?: string;
     votes: VoteStructure[];
-	  total_votes: number;
+    banner_url: string;
+    team_id: string;
+    vote_message: string | null;
 }
 
 export interface VoteStructure {
@@ -42,10 +45,13 @@ export interface VoteStructure {
 export interface UserStructure {
     _id: Snowflake;
     username: string;
-    avatar: string;
-	  bio: string;
-	  team: Team;
+    avatar: string | null;
     notifications: Map<string, NotificationBody>;
+    bio: string | null;
+    notifications_viewed: boolean;
+    banner_url: string | null;
+    flags: UserFlags;
+    premium_type: PremiumType;
 }
 
 export interface ApiStatusStructure {
@@ -75,4 +81,26 @@ export interface TeamMember {
 export enum TeamPermissions {
     Administrator,
     ReadOnly,
+}
+
+export enum UserFlags {
+    BugHunter,
+    Contributor,
+    PremiumPartner,
+    Developer,
+}
+
+export enum PremiumType {
+    /**
+     * User has no premium
+     */
+    None,
+    /**
+     * User has basic premium
+     */
+    Basic,
+    /**
+     * User has advanced premium
+     */
+    Advanced,
 }
