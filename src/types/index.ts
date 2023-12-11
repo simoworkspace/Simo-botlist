@@ -1,6 +1,8 @@
 import { ExtendedClient } from "../Client";
 import { Message, AutocompleteInteraction, ChatInputCommandInteraction } from "discord.js";
 
+type Snowflake = string;
+
 export interface CommandStructure {
     name: string;
     aliases?: string[];
@@ -55,12 +57,12 @@ export interface UserStructure {
 }
 
 export interface ApiStatusStructure {
-  total_mem: number;
-  free_mem: number;
-  users: number;
-  bots: number;
-  uptime: number;
-  request_count: number;
+    total_mem: number;
+    free_mem: number;
+    users: number;
+    bots: number;
+    uptime: number;
+    request_count: number;
 }
 
 export interface Team {
@@ -103,4 +105,18 @@ export enum PremiumType {
      * User has advanced premium
      */
     Advanced,
+}
+
+export interface NotificationBody {
+    content: string;
+    sent_at: string;
+    type: NotificationType;
+    url?: string;
+}
+
+export enum NotificationType {
+    Comment,
+    ApprovedBot,
+    RefusedBot,
+    Mixed,
 }
