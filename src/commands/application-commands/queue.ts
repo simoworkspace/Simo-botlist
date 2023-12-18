@@ -6,7 +6,7 @@ import { userSchema } from "../../schemas/User";
 export default {
 	name: "queue",
 	async run(client, interaction: any) {
-		if (!interaction.member?.roles.cache.has("991400149307887696")) return interaction.reply("Você precisa ser um verificador para usar o comando.");
+		if (!interaction.member?.roles.cache.has("1184264640486715532")) return interaction.reply("Você precisa ser um verificador para usar o comando.");
 
 		let botsall: Array<{ label: string; value: string; description: string }> = [];
 
