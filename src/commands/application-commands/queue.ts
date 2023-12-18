@@ -5,15 +5,10 @@ import { userSchema } from "../../schemas/User";
 
 export default {
 	name: "queue",
-<<<<<<< HEAD
-	async run(client, interaction: any) {
-		if (!interaction.member?.roles.cache.has("1184264640486715532")) return interaction.reply("Você precisa ser um verificador para usar o comando.");
-=======
 	async run(client, interaction) {
 		const members = await interaction.guild?.members.fetch();
 
-		if (!members?.find((member) => member.id === interaction.user.id)?.roles.cache.has("991400149307887696")) return interaction.reply("Você precisa ser um verificador para usar o comando.");
->>>>>>> 60c51f86d38c56699a97011ab53f45795cb3c534
+		if (!members?.find((member) => member.id === interaction.user.id)?.roles.cache.has("1184264640486715532")) return interaction.reply("Você precisa ser um verificador para usar o comando.");
 
 		let botsall: Array<{ label: string; value: string; description: string }> = [];
 
@@ -86,22 +81,17 @@ export default {
 				if (!interaction.isButton()) return;
 
 				if (interaction.customId === "aprovado") {
-					try {
-						interaction.guild.members.cache.get(selbot?._id).roles.add("988515244601118810");
-						selbot?.owners.forEach(owner => interaction.guild.members.cache.get(owner).roles?.add("991507628553412759"));
-					} catch {
+					await botSchema.findById(selbot?._id).updateOne({
+						approved: true
+					})
 
-<<<<<<< HEAD
-						await botSchema.findById(selbot?._id).updateOne({
-							approved: true
-=======
-					const selbotMember = interaction.guild?.members.cache.get(selbot?._id);
+					const selbotMember = interaction.guild?.members.cache.get(selbot?._id as string);
 
 					if (selbotMember) {
 						selbotMember.roles.add("988515244601118810");
 					}
 
-					const ownerMember = interaction.guild?.members.cache.get(selbot?.owner_id);
+					const ownerMember = interaction.guild?.members.cache.get(selbot?.owner_id as string);
 
 					if (ownerMember) {
 						ownerMember.roles.add("991507628553412759");
@@ -115,33 +105,10 @@ export default {
 						method: "POST",
 						body: JSON.stringify({
 							content: `<@${selbot?.owner_id}> :white_check_mark: **|** Seu bot: **${selbot?.name}** (\`${selbot?._id}\`) foi aprovado!`,
->>>>>>> 60c51f86d38c56699a97011ab53f45795cb3c534
 						})
+					});
 
-<<<<<<< HEAD
-						await fetch(process.env.WEBHOOK as string, {
-							headers: {
-								"Content-Type": 'application/json'
-							},
-							method: "POST",
-							body: JSON.stringify({
-								content: selbot?.owners.length === 0 ? `<@${selbot?.owners[0]}>` : selbot?.owners.map(a => `<@${a}>`).join(", "),
-								embeds: [{
-									thumbnail: {
-										url: `https://cdn.discordapp.com/avatars/${selbot?._id}/${selbot?.avatar}.png`
-									},
-									title: "✅ | Análise",
-									color: 0x008000,
-									description: `O seu bot: **${selbot?.name}** (\`${selbot?._id}\`) foi aprovado!!`
-								}]
-							})
-						});
-
-						await interaction.update({ content: `Bot **${selbot?.name}** foi aprovado com sucesso!`, embeds: [], components: [] })
-					}
-=======
 					return void interaction.update({ content: `Bot **${selbot?.name}** foi aprovado com sucesso!`, embeds: [], components: [] })
->>>>>>> 60c51f86d38c56699a97011ab53f45795cb3c534
 				} else {
 					await botSchema.findByIdAndDelete(selbot?._id);
 
@@ -154,30 +121,6 @@ export default {
 							content: `<@${selbot?.owner_id}>\n :x: **|** Seu bot: **${selbot?.name}** (\`${selbot?._id}\`) foi recusado.`,
 						})
 					});
-<<<<<<< HEAD
-
-					const user = await userSchema.findById(selbot?.owners[0]);
-
-					if (!user) return;
-
-					const notificationsId = [...user?.notifications.keys()];
-
-					user?.notifications.set(
-						notificationsId.length < 1
-							? "1"
-							: `${Math.max(...notificationsId.map(Number)) + 1}`,
-						{
-							content: `Seu bot **${selbot?.name}** foi recusado.`,
-							type: 2,
-							sent_at: new Date().toISOString(),
-						}
-
-					);
-
-					await user.save();
-
-					await interaction.update({ content: `Bot **${selbot?.name}** foi recusado com sucesso!`, embeds: [], components: [] })
-=======
 					const user = await userSchema.findById(selbot?.owner_id);
 
 					if (!user) return void interaction.update("Esse dono não está registrado na db");
@@ -198,7 +141,6 @@ export default {
 
 					await user.save();
 					return void interaction.update({ content: `Bot **${selbot?.name}** foi recusado com sucesso!`, embeds: [], components: [] })
->>>>>>> 60c51f86d38c56699a97011ab53f45795cb3c534
 				}
 			});
 		});
