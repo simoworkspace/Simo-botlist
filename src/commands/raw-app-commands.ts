@@ -32,5 +32,28 @@ export const JSONStructure: ApplicationCommandData[] = [
                 required: true
             }
         ]
-    }
+		 },
+	{
+			name: "rank-votes",
+		  type: ApplicationCommandType.ChatInput,
+		  description: "Veja um rank de votos de bots.",
+	},
+	{
+			name: "status",
+		  type: ApplicationCommandType.ChatInput,
+		  description: "Veja os status da Simo api.",
+	},
+	  {
+    name: "user-info",
+    type: ApplicationCommandType.ChatInput,
+    description: "Retorna infos do usuário mencionado na database da Simo",
+    options: [
+      {
+        name: "user",
+        description: "Mencione um usuário para buscar informações",
+        type: ApplicationCommandOptionType.User,
+        required: false
+      }
+    ]
+		}
 ];
